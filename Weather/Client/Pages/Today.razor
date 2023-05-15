@@ -1,0 +1,154 @@
+﻿@page "/"
+@inject HttpClient Http
+@using BrowserInterop.Extensions
+@using BrowserInterop.Geolocation
+@using System.Text.Json
+@inject IJSRuntime jsRuntime
+@inject DialogService DialogService
+@inject NavigationManager Navigation
+@using Weather.Shared.Models.Main
+
+@if (currentPosition is not null)
+{
+        <div id="today">
+            <div class="card">
+                <div class="card-content">
+                
+                    <h3>@location.DisplayName</h3>
+                <p>Your cooridnates are @String.Format("{0:0.000}", @location.Latitude) @String.Format("{0:0.000}", @location.Longitude)</p>
+                     <div>
+                         <RadzenGoogleMap Style="height: 300px" Zoom=@zoom Center=@(new GoogleMapPosition() {Lat=location.Latitude, Lng=location.Longitude}) MapClick=@OnMapClick MarkerClick="@OnMarkerClick">
+                             <Markers>
+                                 <RadzenGoogleMapMarker Title=@location.DisplayName Position=@(new GoogleMapPosition() {Lat=location.Latitude, Lng=location.Longitude})/>
+                             </Markers>
+                         </RadzenGoogleMap>
+                     </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <p> Max Temperature: 20     Min Temperature: 10</p>
+                    <p>Sune rise and Sun set</p>
+                    <p>UV Index</p>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div card-cotnent>
+                    Detailed Infromation
+                    Download as CSV
+                </div>
+            </div>
+
+
+        </div>
+}
+
+
+@code {
+    private WindowNavigatorGeolocation geolocationWrapper;
+    private GeolocationPosition currentPosition;
+    private Location location=new Location();
+    int orderID = 10248;
+    int zoom = 15;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var window = await jsRuntime.Window();
+        var navigator = await window.Navigator();
+        geolocationWrapper = navigator.Geolocation;
+        await GetGeolocation();
+        double latitude = currentPosition.Coords.Latitude;
+        double longitude = currentPosition.Coords.Longitude;
+        await GetAddreess(latitude, longitude);
+        await GetTimeZone();
+    }
+
+
+    public async Task GetGeolocation()
+    {
+
+        currentPosition = (await geolocationWrapper.GetCurrentPosition(new PositionOptions()
+            {
+                EnableHighAccuracy = true,
+                MaximumAgeTimeSpan = TimeSpan.Zero,
+                TimeoutTimeSpan = TimeSpan.MaxValue,
+            })).Location;
+    }
+
+    private async Task GetAddreess(double latitude, double longitude)
+    {
+        string apiUrl = string.Format("https://geocode.maps.co/reverse?lat={0}&lon={1}", latitude, longitude);
+
+        HttpResponseMessage response = await Http.GetAsync(apiUrl);
+        Console.WriteLine(apiUrl);
+        if (response.IsSuccessStatusCode)
+        {
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            // Parse the JSON response
+            var jsonObject = JsonDocument.Parse(responseContent);
+            Console.WriteLine(jsonObject);
+            // Get the latest values for each parameter for Tucson
+            try
+            {
+                string? displayName = jsonObject.RootElement.GetProperty("display_name").GetString();
+
+
+                location.DisplayName = displayName;
+                location.Longitude = longitude;
+                location.Latitude = latitude;
+            }
+
+            catch(Exception ex)
+            {
+                Console.WriteLine("Somethign has gone wrong.");
+            }
+
+        }
+
+        else
+        {
+            throw new Exception($"Error retrieving weather data: {response.ReasonPhrase}");
+        }
+    }
+
+    private async Task SetUpLocation(GoogleMapClickEventArgs args)
+    {
+
+    }
+
+    private async Task GetTimeZone()
+    {
+        string api = Navigation.BaseUri + "api/timezone";
+        try
+        {
+            var response= await Http.PostAsJsonAsync(api, location);
+        
+        }
+
+        catch(Exception ex)
+        {
+            Console.WriteLine("Something went wrong.");
+        }
+
+
+    }
+
+    async void OnMapClick(GoogleMapClickEventArgs args)
+    {
+        location.Latitude = args.Position.Lat;
+        location.Longitude = args.Position.Lng;
+        await GetAddreess(location.Latitude, location.Longitude);
+        StateHasChanged();
+    }
+
+    void OnMarkerClick(RadzenGoogleMapMarker marker)
+    {
+
+    }
+}

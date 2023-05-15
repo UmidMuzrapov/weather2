@@ -1,0 +1,86 @@
+﻿@page "/global"
+@inject HttpClient Http
+@using BrowserInterop.Extensions
+@using BrowserInterop.Geolocation
+@using System.Text.Json
+@inject IJSRuntime jsRuntime
+
+@if (currentPosition is not null)
+{
+    <div>
+        <div class="card">
+            <div class="card-content">
+                @DisplayName
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                General Weather Information
+            </div>
+        </div>
+
+        <div class="card">
+            <div card-cotnent>
+                Next hour Information
+            </div>
+        </div>
+
+
+    </div>
+}
+
+
+@code
+{
+    private WindowNavigatorGeolocation geolocationWrapper;
+    private GeolocationPosition currentPosition;
+    public string? DisplayName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var window = await jsRuntime.Window();
+        var navigator = await window.Navigator();
+        geolocationWrapper = navigator.Geolocation;
+        await GetGeolocation();
+        double latitude = currentPosition.Coords.Latitude;
+        double longitude = currentPosition.Coords.Longitude;
+        DisplayName = await GetAddreess(latitude, longitude);
+    }
+
+    public async Task GetGeolocation()
+    {
+
+        currentPosition = (await geolocationWrapper.GetCurrentPosition(new PositionOptions()
+            {
+                EnableHighAccuracy = true,
+                MaximumAgeTimeSpan = TimeSpan.Zero,
+                TimeoutTimeSpan = TimeSpan.MaxValue,
+            })).Location;
+
+    }
+
+    private async Task<string?> GetAddreess(double latitude, double longitude)
+    {
+        string apiUrl = string.Format("https://geocode.maps.co/reverse?lat={0}&lon={1}", latitude, longitude);
+
+        HttpResponseMessage response = await Http.GetAsync(apiUrl);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            // Parse the JSON response
+            var jsonObject = JsonDocument.Parse(responseContent);
+
+            // Get the latest values for each parameter for Tucson
+            string? display_name = jsonObject.RootElement.GetProperty("display_name").GetString();
+
+            return display_name;
+        }
+        else
+        {
+            throw new Exception($"Error retrieving weather data: {response.ReasonPhrase}");
+        }
+    }
+}
