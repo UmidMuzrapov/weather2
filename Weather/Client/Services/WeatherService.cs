@@ -15,6 +15,8 @@ namespace Weather.Client.Services
         private HttpClient _httpClient;
         private NavigationManager _navigationManager;
         private List<DayModel> _days;
+        private List<HourModel> _today;
+        private HourModel _current;
 
         private Weather.Shared.Models.Main.Weather? weather { get; set; }
         private Location? Location { get; set; }
@@ -26,11 +28,9 @@ namespace Weather.Client.Services
 
         public async Task SetWeather()
         {
-
             weather=await GetWeatherDataForTucsonAsync(Location);
             CreateListOfDays();
-
-
+            GetTodayInfo();
         }
 
         public void SertDependencies(HttpClient http, NavigationManager navigation)
@@ -72,6 +72,46 @@ namespace Weather.Client.Services
                 });
             }
         }
+        private void GetTodayInfo()
+        {
+            _today =new List<HourModel>();
+
+            for (int i = 48; i<73; i++)
+            {
+                _today.Add(new HourModel
+                {
+                    Time=weather.WeatherHourly.time[i],
+                    Temperature2M=weather.WeatherHourly.temperature_2m[i],
+                    RelativeHumidity=weather.WeatherHourly.relativehumidity_2m[i],
+                    Rain=weather.WeatherHourly.rain[i],
+                    Snowfall=weather.WeatherHourly.rain[i],
+                    CloudCover=weather.WeatherHourly.cloudcover[i],
+                    WindDirection=weather.WeatherHourly.winddirection_10m[i],
+                    UVIndex=weather.WeatherHourly.uv_index[i],
+                    IsDay=weather.WeatherHourly.is_day[i]
+
+                });
+
+                if (weather.WeatherHourly.time[i].Hour.Equals(DateTime.Now.Hour))
+                {
+                    _current=new HourModel
+                    {
+                        Time=weather.WeatherHourly.time[i],
+                        Temperature2M=weather.WeatherHourly.temperature_2m[i],
+                        RelativeHumidity=weather.WeatherHourly.relativehumidity_2m[i],
+                        Rain=weather.WeatherHourly.rain[i],
+                        Snowfall=weather.WeatherHourly.rain[i],
+                        CloudCover=weather.WeatherHourly.cloudcover[i],
+                        WindDirection=weather.WeatherHourly.winddirection_10m[i],
+                        UVIndex=weather.WeatherHourly.uv_index[i],
+                        IsDay=weather.WeatherHourly.is_day[i]
+
+                    };
+                }
+
+            }
+        }
+
 
         public async Task<Weather.Shared.Models.Main.Weather> GetWeatherDataForTucsonAsync(Location location)
         {

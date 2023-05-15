@@ -8,7 +8,6 @@ namespace Weather.Shared.Models.Main
 {
     public class WeatherHourly
     {
-
         public DateTime[]? time { get; set; }
 
         public float[]? temperature_2m { get; set; }
