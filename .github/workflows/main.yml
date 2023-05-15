@@ -13,7 +13,7 @@ jobs:
       with:
         dotnet-version: 6.0.307
     - name: Publish .NET Core Project
-      run: dotnet publish ./Weather/Server/Weather.Server.csproj -c Release -o release --nologo
+      run: dotnet publish ./Weather/Client/Weather.Client.csproj -c Release -o release --nologo
     # changes the base-tag in index.html from '/' to 'BlazorGitHubPagesDemo' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to weather2
       run: sed -i 's/<base href="\/" \/>/<base href="\/weather2\/" \/>/g' release/wwwroot/index.html
