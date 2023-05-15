@@ -15,7 +15,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<TimezoneController>();
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("https://umidmuzrapov.github.io")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -41,5 +49,6 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapDefaultControllerRoute();
 app.MapFallbackToFile("index.html");
+app.UseCors();
 
 app.Run();
