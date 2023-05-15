@@ -15,6 +15,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Pages\Components\Dialog.razor" />
+    <None Include="Pages\Global.razor" />
+    <None Include="Pages\Hourly.razor" />
+    <None Include="Pages\Radar.razor" />
+    <None Include="Pages\Today.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="BrowserInterop" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
