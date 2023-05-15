@@ -21,6 +21,12 @@ namespace Weather.Server.Controllers
             _httpClient = httpClient;
         }
 
+        [HttpGet]
+        public void Simple()
+        {
+            Console.WriteLine("Test");
+        }
+
         [HttpPost]
         public async Task<Weather.Shared.Models.Main.Weather> GetWeatherDataForTucsonAsync(Location location)
         {
