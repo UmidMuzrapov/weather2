@@ -6,7 +6,7 @@ using Weather.Shared.Models.Main;
 
 namespace Weather.Server.Controllers
 {
-    [Route("api/timezone")]
+    [Route("weather2/api/timezone")]
     [ApiController]
     public class TimezoneController
     {

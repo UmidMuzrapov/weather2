@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Weather.Server.Controllers
 {
 
-    [Route("api/weather")]
+    [Route("weather2/api/weather")]
     [ApiController]
     public class WeatherController
     {
