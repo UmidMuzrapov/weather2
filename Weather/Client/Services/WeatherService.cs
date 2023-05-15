@@ -8,8 +8,6 @@ using Weather.Shared.Models.Main;
 
 namespace Weather.Client.Services
 {
-
-
     public class WeatherService : IWeatherService
     {
         private HttpClient _httpClient;
@@ -111,7 +109,6 @@ namespace Weather.Client.Services
 
             }
         }
-
 
         public async Task<Weather.Shared.Models.Main.Weather> GetWeatherDataForTucsonAsync(Location location)
         {

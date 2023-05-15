@@ -8,6 +8,7 @@
 @inject NavigationManager Navigation
 @using Weather.Shared.Models.Main
 @inject IWeatherService _weatherService
+@inject IIconChooser _iconChooser
 
 @if (location is not null)
 {
@@ -38,7 +39,9 @@
             </div>
         </div>
 
+        <div>
 
+        </div>
         <div class="card">
             <div class="card-content">
                 @_weatherService.GetDaysInfo().Count
@@ -53,6 +56,7 @@
 
                 </RadzenChart>
 
+                @(new MarkupString (_iconChooser.GetIcon(true, 5, 0, 0)))
             </div>
         </div>
 
@@ -169,7 +173,7 @@
 
                     <!-------------------- ICONS--------------------->
                     <!-- Dark clouds -->
-@*                    <figure>
+                    <figure>
                         <svg class="icon" viewbox="0 0 100 100">
                             <use xlink:href="#grayCloud" class="small-cloud" fill="url(#gradGray)" />
                             <use xlink:href="#grayCloud" x="25" y="10" class="reverse-small-cloud" fill="url(#gradDarkGray)" />
@@ -177,8 +181,8 @@
                         </svg>
                         <figcaption>Dark Clouds</figcaption>
                     </figure>
-*@
-                    @* <!-- Few clouds -->
+
+                     <!-- Few clouds -->
                 <figure>
                 <svg class="icon" viewbox="0 0 100 100">
                 <use xlink:href="#grayCloud" class="small-cloud" fill="url(#gradGray)" />
@@ -417,7 +421,7 @@
                 <use id="mist" xlink:href="#mist" x="0" y="30" />
                 </svg>
                 <figcaption>Mist/Fog</figcaption>
-                </figure>*@
+                </figure>
 
                 </div>
             </div>

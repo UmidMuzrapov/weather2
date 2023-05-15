@@ -18,6 +18,7 @@ builder.Services.AddScoped(sp => { return new HttpClient() { BaseAddress = new U
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
+builder.Services.AddSingleton<IIconChooser, IconChooser>();
 builder.Services.AddAuthentication(
     CookieAuthenticationDefaults.AuthenticationScheme
 );
