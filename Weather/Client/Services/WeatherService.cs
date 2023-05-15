@@ -24,7 +24,7 @@ namespace Weather.Client.Services
 
         public async Task SetWeather()
         {
-            var response = await _httpClient.PostAsJsonAsync(_navigationManager.BaseUri+"api/weather", Location);
+            var response = await _httpClient.PostAsJsonAsync(_navigationManager.BaseUri+"weather2/api/weather", Location);
 
             if (response.IsSuccessStatusCode)
             {
