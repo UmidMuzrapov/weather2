@@ -8,13 +8,11 @@ namespace Weather.Shared.Models.Main
 {
     public class Weather
     {
-        public Weather(Dictionary<int, WeatherHourly> hourlyInfo, WeatherDaily dailyInfo)
-        {
-            this.DailyInfo=dailyInfo;
-            this.HourlyInfo=hourlyInfo;
-        }
+        public CurrentWeather? CurrentWeather { get; set; }
+        public DailyUnits? DailyUnits { get; set; }
+        public HourlyUnits? HourlyUnits { get; set; }
+        public WeatherDaily? WeatherDaily { get; set; }
+        public WeatherHourly? WeatherHourly { get; set; }
 
-        public WeatherDaily DailyInfo { get; set; }
-        public Dictionary<int, WeatherHourly> HourlyInfo { get; set; }
     }
 }

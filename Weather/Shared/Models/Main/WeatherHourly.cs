@@ -9,25 +9,24 @@ namespace Weather.Shared.Models.Main
     public class WeatherHourly
     {
 
-        public WeatherHourly(string hour, double temperature, double relativeHumidity, 
-            double precipitation_probability, double precipitation, int cloudcover, double windspeed)
-        {
-            this.Hour = hour;
-            this.Temperature = temperature;
-            this.RelativeHumidity= relativeHumidity;
-            this.Cloudcover = cloudcover;
-            this.Windspeed = windspeed;
-            this.Precipitation= precipitation;
-            this.Precipitation_probability= precipitation_probability;
-        }
+        public DateTime[]? time { get; set; }
 
-        public string Hour { get; set; }
-        public double Temperature { get; set; } = 0.0;      
-        public double RelativeHumidity { get;set; }
-        public double Precipitation_probability { get;set; }
-        public double Precipitation { get; set;}
-        public int Cloudcover { get; set; }
-        public double Windspeed { get; set; }
+        public float[]? temperature_2m { get; set; }
 
+        public float[]? relativehumidity_2m { get; set; }
+
+        public float[]? rain { get; set; }
+
+        public float[]? snowfall { get; set; }
+        
+        public float[]? cloudcover { get; set; }
+
+        public float[]? windspeed_10m { get; set; }
+
+        public int[]? winddirection_10m { get; set; }
+
+        public float[]? uv_index { get; set; }
+
+        public bool[]? is_day { get; set; }
     }
 }

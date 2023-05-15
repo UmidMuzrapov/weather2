@@ -16,6 +16,5 @@ namespace Weather.Shared.Models.Main
 
         public string? Time12 { get; set;}
 
-
     }
 }

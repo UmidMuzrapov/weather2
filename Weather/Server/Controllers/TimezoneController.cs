@@ -21,7 +21,7 @@ namespace Weather.Server.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<Timezone> GetTimeZone(Location location)
         {
-            string apiUrl = System.String.Format("https://api.ipgeolocation.io/timezone?apiKey=API_KEY&lat=%f&long=%f", location.Latitude, location.Longitude);
+            string apiUrl = System.String.Format("https://api.ipgeolocation.io/timezone?apiKey=a1cf5af5a30442fc8f89d77a26e56cc3&lat={0:g}&long={0:g}", location.Latitude, location.Longitude);
 
             HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
 

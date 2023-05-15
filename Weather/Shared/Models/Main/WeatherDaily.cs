@@ -8,15 +8,20 @@ namespace Weather.Shared.Models.Main
 {
     public class WeatherDaily
     {
-        public double MaximumTemperature { get; set; }
+        public DateTime[]? time { get; set; }
 
-        public double MinimumTemperature { get; set; }
+        public float[]? temperature_2m_max { get; set; }
 
-        public string Sunrise { get; set; }
+        public float[]? temperature_2m_min { get; set; }
 
-        public string Sunset { get; set;}
+        public DateTime[]? sunrise { get; set; }
 
-        public double UVIndexMax { get; set; }
+        public DateTime[]? sunset { get; set; }
 
+        public float[]? uv_index_max { get; set; }
+
+        public float[]? precipitation_hours { get; set; }
+
+        public float[]? windspeed_10m_max { get; set; }
     }
 }
