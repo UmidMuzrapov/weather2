@@ -17,5 +17,9 @@ namespace Weather.Client.Services
 
         public List<DayModel> GetDaysInfo();
 
+        public List<HourModel> GetTodayInfo();
+
+        public HourModel GetCurrentInfo();
+
     }
 }

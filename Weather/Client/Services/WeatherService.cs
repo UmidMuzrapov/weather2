@@ -175,5 +175,15 @@ namespace Weather.Client.Services
                 throw new Exception($"Error retrieving weather data: {response.ReasonPhrase}");
             }
         }
+
+        List<HourModel> IWeatherService.GetTodayInfo()
+        {
+            return _today;
+        }
+
+        public HourModel GetCurrentInfo()
+        {
+            return _current;
+        }
     }
 }

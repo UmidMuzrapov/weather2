@@ -3,7 +3,7 @@
     public class IconChooser : IIconChooser
     {
 
-        public string GetIcon(bool isDay, int cloudcover, float rain, float snow)
+        public string GetIcon(bool isDay, float cloudcover, float rain, float snow)
         {
             if (isDay)
             {
