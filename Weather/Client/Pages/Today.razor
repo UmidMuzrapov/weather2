@@ -7,21 +7,21 @@
 @inject DialogService DialogService
 @inject NavigationManager Navigation
 @using Weather.Shared.Models.Main
-@inject IWeatherService _weatherService
+@inject IWeatherService WS
 @inject IIconChooser _iconChooser
 
-@if (location is not null)
+@if (WS.GetWeather() is not null)
 {
     <div id="today">
         <div class="card">
             <div class="card-content">
 
-                <h3>@location.DisplayName</h3>
-                <p>Your cooridnates are @String.Format("{0:0.000}", @location.Latitude) @String.Format("{0:0.000}", @location.Longitude)</p>
+                <h3>@WS.GetLocation().DisplayName</h3>
+                <p>Your cooridnates are @String.Format("{0:0.000}", WS.GetLocation().Latitude) @String.Format("{0:0.000}", WS.GetLocation().Longitude)</p>
                 <div>
-                    <RadzenGoogleMap Style="height: 300px" Zoom=@zoom Center=@(new GoogleMapPosition() {Lat=location.Latitude, Lng=location.Longitude}) MapClick=@OnMapClick MarkerClick="@OnMarkerClick">
+                    <RadzenGoogleMap Style="height: 300px" Zoom=@zoom Center=@(new GoogleMapPosition() {Lat=WS.GetLocation().Latitude, Lng=WS.GetLocation().Longitude}) MapClick=@OnMapClick MarkerClick="@OnMarkerClick">
                         <Markers>
-                            <RadzenGoogleMapMarker Title=@location.DisplayName Position=@(new GoogleMapPosition() {Lat=location.Latitude, Lng=location.Longitude}) />
+                            <RadzenGoogleMapMarker Title=@WS.GetLocation().DisplayName Position=@(new GoogleMapPosition() {Lat=WS.GetLocation().Latitude, Lng=WS.GetLocation().Longitude}) />
                         </Markers>
                     </RadzenGoogleMap>
                 </div>
@@ -33,12 +33,12 @@
         <div></div>
         <div class="card">
             <div class="card-content">
-                <p>Temperature@_weather.CurrentWeather.temperature
-                    @(new MarkupString(_iconChooser.GetIcon(_weatherService.GetCurrentInfo().IsDay, _weatherService.GetCurrentInfo().CloudCover, _weatherService.GetCurrentInfo().Rain, _weatherService.GetCurrentInfo().Snowfall)))</p>
-                <p>Wind Speed @_weather.CurrentWeather.windspeed</p>
-                <p>Wind Direction @_weather.CurrentWeather.winddirection</p>
-                <P>Relative Humidity @_weatherService.GetCurrentInfo().RelativeHumidity</P>
-                <p>@_weatherService.GetCurrentInfo().UVIndex</p>
+                <p>Temperature @WS.GetWeather().CurrentWeather.temperature;
+                    @(new MarkupString(_iconChooser.GetIcon(WS.GetCurrentInfo().IsDay, WS.GetCurrentInfo().CloudCover, WS.GetCurrentInfo().Rain, WS.GetCurrentInfo().Snowfall)))</p>
+                <p>Wind Speed @WS.GetWeather().CurrentWeather.windspeed</p>
+                <p>Wind Direction @WS.GetWeather().CurrentWeather.winddirection</p>
+                <p>Relative Humidity @WS.GetCurrentInfo().RelativeHumidity</p>
+                <p>@WS.GetCurrentInfo().UVIndex</p>
 
             </div>
         </div>
@@ -49,9 +49,9 @@
 
         <div class="card">
             <div class="card-content">
-                @_weatherService.GetDaysInfo().Count
+                @WS.GetDaysInfo().Count
                 <RadzenChart>
-                    <RadzenLineSeries Smooth="true" Data="@_weatherService.GetTodayInfo()" Title="Temperature (F)" CategoryProperty="Time.Hour" ValueProperty="Temperature2M">
+                    <RadzenLineSeries Smooth="true" Data="@WS.GetTodayInfo()" Title="Temperature (F)" CategoryProperty="Time.Hour" ValueProperty="Temperature2M">
                         <RadzenMarkers MarkerType="MarkerType.Circle" />
                     </RadzenLineSeries>
                     <RadzenMarkers MarkerType="MarkerType.Square" />
@@ -64,12 +64,12 @@
 
         <div class="card">
             <div class="card-content">
-                @_weatherService.GetDaysInfo().Count
+                @WS.GetDaysInfo().Count
                 <RadzenChart>
-                    <RadzenLineSeries Smooth="true" Data="@_weatherService.GetDaysInfo()" Title="Max Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_max">
+                    <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Max Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_max">
                         <RadzenMarkers MarkerType="MarkerType.Circle" />
                     </RadzenLineSeries>
-                    <RadzenLineSeries Smooth="true" Data="@_weatherService.GetDaysInfo()" Title="Min Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_min">
+                    <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Min Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_min">
                         <RadzenMarkers MarkerType="MarkerType.Circle" />
                     </RadzenLineSeries>
                     <RadzenMarkers MarkerType="MarkerType.Square" />
@@ -215,23 +215,15 @@
         var navigator = await window.Navigator();
         geolocationWrapper = navigator.Geolocation;
 
-        if (_weatherService.GetWeather() is null)
+        if (WS.GetWeather() is null)
         {
             location = new Location();
             await GetGeolocation();
             double latitude = currentPosition.Coords.Latitude;
             double longitude = currentPosition.Coords.Longitude;
             await GetAddreess(latitude, longitude);
-            _weatherService.SertDependencies(Http, Navigation);
-            _weatherService.SetLocation(location);
-            await _weatherService.SetWeather();
-            _weather = _weatherService.GetWeather();
-        }
-
-        else
-        {
-            location = _weatherService.GetLocation();
-            _weather=_weatherService.GetWeather();
+            WS.SetDependencies(Http, Navigation);
+            await WS.SetWeather(location);
         }
 
     }
@@ -309,9 +301,7 @@
         location.Latitude = args.Position.Lat;
         location.Longitude = args.Position.Lng;
         await GetAddreess(location.Latitude, location.Longitude);
-        _weatherService.SetLocation(location);
-        await _weatherService.SetWeather();
-        _weather = _weatherService.GetWeather();
+        await WS.SetWeather(location);
         StateHasChanged();
     }
 

@@ -7,13 +7,11 @@ namespace Weather.Client.Services
     {
         public Weather.Shared.Models.Main.Weather? GetWeather();
 
-        public Task SetWeather();
+        public Task SetWeather(Location location);
 
-        public void SertDependencies(HttpClient http, NavigationManager navigation);
+        public void SetDependencies(HttpClient http, NavigationManager navigation);
 
-        public Location? GetLocation();
-
-        public void SetLocation(Location location);
+        public Location GetLocation();
 
         public List<DayModel> GetDaysInfo();
 

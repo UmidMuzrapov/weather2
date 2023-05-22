@@ -10,41 +10,36 @@ namespace Weather.Client.Services
 {
     public class WeatherService : IWeatherService
     {
-        private HttpClient _httpClient;
-        private NavigationManager _navigationManager;
-        private List<DayModel> _days;
-        private List<HourModel> _today;
-        private HourModel _current;
-
+        private HttpClient? _httpClient;
+        private NavigationManager? _navigationManager;
+        private List<DayModel>? _days;
+        private List<HourModel>? _today;
+        private HourModel? _current;
         private Weather.Shared.Models.Main.Weather? weather { get; set; }
-        private Location? Location { get; set; }
+        private Location? _location { get; set; }
 
         public Weather.Shared.Models.Main.Weather? GetWeather()
         {
             return weather;
         }
 
-        public async Task SetWeather()
+        public async Task SetWeather(Location location)
         {
-            weather=await GetWeatherDataForTucsonAsync(Location);
+            _location= location;
+            weather=await GetWeatherData();
             CreateListOfDays();
             GetTodayInfo();
         }
 
-        public void SertDependencies(HttpClient http, NavigationManager navigation)
+        public void SetDependencies(HttpClient http, NavigationManager navigation)
         {
             _httpClient=http;
             _navigationManager=navigation;
         }
 
-        public void SetLocation(Location location)
-        {
-            Location= location;
-        }
-
         public Location? GetLocation()
         {
-            return Location;
+            return _location;
         }
 
         public List<DayModel> GetDaysInfo()
@@ -110,11 +105,11 @@ namespace Weather.Client.Services
             }
         }
 
-        public async Task<Weather.Shared.Models.Main.Weather> GetWeatherDataForTucsonAsync(Location location)
+        public async Task<Weather.Shared.Models.Main.Weather> GetWeatherData()
         {
-            Timezone timezone = await GetTimeZone(location);
+            Timezone timezone = await GetTimeZone();
 
-            string apiUrl = $"https://api.open-meteo.com/v1/forecast?latitude={location.Latitude}&longitude={location.Longitude}&hourly=temperature_2m,relativehumidity_2m,rain,snowfall,cloudcover,windspeed_10m,winddirection_10m,uv_index,is_day&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_hours,windspeed_10m_max&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&past_days=2&forecast_days=4&timezone={timezone.TimezoneP}";
+            string apiUrl = $"https://api.open-meteo.com/v1/forecast?latitude={_location.Latitude}&longitude={_location.Longitude}&hourly=temperature_2m,relativehumidity_2m,rain,snowfall,cloudcover,windspeed_10m,winddirection_10m,uv_index,is_day&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_hours,windspeed_10m_max&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&past_days=2&forecast_days=4&timezone={timezone.TimezoneP}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
 
@@ -133,6 +128,7 @@ namespace Weather.Client.Services
 
                 return weather;
             }
+
             else
             {
                 throw new Exception($"Error retrieving weather data: {response.ReasonPhrase}");
@@ -140,9 +136,9 @@ namespace Weather.Client.Services
 
         }
 
-        public async System.Threading.Tasks.Task<Timezone> GetTimeZone(Location location)
+        public async System.Threading.Tasks.Task<Timezone> GetTimeZone()
         {
-            string apiUrl = $"https://api.ipgeolocation.io/timezone?apiKey=a1cf5af5a30442fc8f89d77a26e56cc3&lat={location.Latitude}&long={location.Longitude}";
+            string apiUrl = $"https://api.ipgeolocation.io/timezone?apiKey=a1cf5af5a30442fc8f89d77a26e56cc3&lat={_location.Latitude}&long={_location.Longitude}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
 
