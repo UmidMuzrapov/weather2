@@ -142,7 +142,7 @@ namespace Weather.Client.Services
 
         public async System.Threading.Tasks.Task<Timezone> GetTimeZone(Location location)
         {
-            string apiUrl = System.String.Format("https://api.ipgeolocation.io/timezone?apiKey=a1cf5af5a30442fc8f89d77a26e56cc3&lat={0:g}&long={0:g}", location.Latitude, location.Longitude);
+            string apiUrl = $"https://api.ipgeolocation.io/timezone?apiKey=a1cf5af5a30442fc8f89d77a26e56cc3&lat={location.Latitude}&long={location.Longitude}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
 
