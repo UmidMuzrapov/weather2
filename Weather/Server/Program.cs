@@ -8,6 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Weather.Server.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
+string appPoolId = "";
+string clientId = "";
+string identityPoolId = "";
+string username = "";
+string passwrod = "";
 
 // Add services to the container.
 

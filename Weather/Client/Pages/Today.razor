@@ -17,7 +17,7 @@
             <div class="card-content">
 
                 <h3>@WS.GetLocation().DisplayName</h3>
-                <p>Your cooridnates are @String.Format("{0:0.000}", WS.GetLocation().Latitude) @String.Format("{0:0.000}", WS.GetLocation().Longitude)</p>
+                <p>Your cooridnates are @String.Format("{0:0.000}", WS.GetLocation().Latitude) @String.Format("{0:0.000}", WS.GetLocation().Longitude) @(new MarkupString(_iconChooser.GetIcon(WS.GetCurrentInfo().IsDay, WS.GetCurrentInfo().CloudCover, WS.GetCurrentInfo().Rain, WS.GetCurrentInfo().Snowfall)))</p>
                 <div>
                     <RadzenGoogleMap Style="height: 300px" Zoom=@zoom Center=@(new GoogleMapPosition() {Lat=WS.GetLocation().Latitude, Lng=WS.GetLocation().Longitude}) MapClick=@OnMapClick MarkerClick="@OnMarkerClick">
                         <Markers>
@@ -30,26 +30,9 @@
         </div>
           
 
-        <div></div>
-        <div class="card">
+              <div class="card">
             <div class="card-content">
-                <p>Temperature @WS.GetWeather().CurrentWeather.temperature;
-                    @(new MarkupString(_iconChooser.GetIcon(WS.GetCurrentInfo().IsDay, WS.GetCurrentInfo().CloudCover, WS.GetCurrentInfo().Rain, WS.GetCurrentInfo().Snowfall)))</p>
-                <p>Wind Speed @WS.GetWeather().CurrentWeather.windspeed</p>
-                <p>Wind Direction @WS.GetWeather().CurrentWeather.winddirection</p>
-                <p>Relative Humidity @WS.GetCurrentInfo().RelativeHumidity</p>
-                <p>@WS.GetCurrentInfo().UVIndex</p>
-
-            </div>
-        </div>
-
-        <div>
-
-        </div>
-
-        <div class="card">
-            <div class="card-content">
-                @WS.GetDaysInfo().Count
+                <RadzenText>Hourly Temperature</RadzenText>
                 <RadzenChart>
                     <RadzenLineSeries Smooth="true" Data="@WS.GetTodayInfo()" Title="Temperature (F)" CategoryProperty="Time.Hour" ValueProperty="Temperature2M">
                         <RadzenMarkers MarkerType="MarkerType.Circle" />
@@ -64,7 +47,7 @@
 
         <div class="card">
             <div class="card-content">
-                @WS.GetDaysInfo().Count
+                <RadzenText>Daily Temperature</RadzenText>
                 <RadzenChart>
                     <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Max Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_max">
                         <RadzenMarkers MarkerType="MarkerType.Circle" />
@@ -78,6 +61,22 @@
 
             </div>
         </div>
+
+
+        <div class="card">
+            <div class="card-content">
+                <p>Temperature @WS.GetWeather().CurrentWeather.temperature;</p>
+                <p>Wind Speed: @WS.GetWeather().CurrentWeather.windspeed</p>
+                <p>Wind Direction: @WS.GetWeather().CurrentWeather.winddirection</p>
+                <p>Relative Humidity: @WS.GetCurrentInfo().RelativeHumidity</p>
+                <p>UV Index: @WS.GetCurrentInfo().UVIndex</p>
+
+            </div>
+        </div>
+
+
+
+
 
         <div class="card">
             <div card-cotnent>
