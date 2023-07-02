@@ -1,6 +1,21 @@
 ﻿@page "/hourly"
+@using Weather.Shared.Models.Main
+@inject IWeatherService WS
+@inject IIconChooser _iconChooser
 
-<h3>Hourly</h3>
+<div id="hourly">
+<RadzenCard>
+    <div class="custom-card-header">Hourly Temperature</div>
+    <div class="card-content">
+        <RadzenChart>
+            <RadzenLineSeries Smooth="true" Data="@WS.GetTodayInfo()" Title="Temperature (F)" CategoryProperty="Time.Hour" ValueProperty="Temperature2M">
+                <RadzenMarkers MarkerType="MarkerType.Circle" />
+            </RadzenLineSeries>
+            <RadzenMarkers MarkerType="MarkerType.Square" />
+        </RadzenChart>
+    </div>
+</RadzenCard>
+</div>
 
 @code {
 

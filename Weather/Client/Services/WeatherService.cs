@@ -69,7 +69,7 @@ namespace Weather.Client.Services
         {
             _today =new List<HourModel>();
 
-            for (int i = 48; i<73; i++)
+            for (int i = 48; i<72; i++)
             {
                 _today.Add(new HourModel
                 {

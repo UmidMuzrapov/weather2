@@ -13,11 +13,15 @@
 @if (WS.GetWeather() is not null)
 {
     <div id="today">
-        <div class="card">
+
+
+        <RadzenCard>
+            <div class="custom-card-header">Location</div>
             <div class="card-content">
 
-                <h3>@WS.GetLocation().DisplayName</h3>
-                <p>Your cooridnates are @String.Format("{0:0.000}", WS.GetLocation().Latitude) @String.Format("{0:0.000}", WS.GetLocation().Longitude) @(new MarkupString(_iconChooser.GetIcon(WS.GetCurrentInfo().IsDay, WS.GetCurrentInfo().CloudCover, WS.GetCurrentInfo().Rain, WS.GetCurrentInfo().Snowfall)))</p>
+                <p>@WS.GetLocation().DisplayName</p>
+
+                <p>Your cooridnates are @String.Format("{0:0.000}", WS.GetLocation().Latitude) @String.Format("{0:0.000}", WS.GetLocation().Longitude)</p>
                 <div>
                     <RadzenGoogleMap Style="height: 300px" Zoom=@zoom Center=@(new GoogleMapPosition() {Lat=WS.GetLocation().Latitude, Lng=WS.GetLocation().Longitude}) MapClick=@OnMapClick MarkerClick="@OnMarkerClick">
                         <Markers>
@@ -25,64 +29,29 @@
                         </Markers>
                     </RadzenGoogleMap>
                 </div>
-
             </div>
-        </div>
-          
+        </RadzenCard>
 
-              <div class="card">
-            <div class="card-content">
-                <RadzenText>Hourly Temperature</RadzenText>
-                <RadzenChart>
-                    <RadzenLineSeries Smooth="true" Data="@WS.GetTodayInfo()" Title="Temperature (F)" CategoryProperty="Time.Hour" ValueProperty="Temperature2M">
-                        <RadzenMarkers MarkerType="MarkerType.Circle" />
-                    </RadzenLineSeries>
-                    <RadzenMarkers MarkerType="MarkerType.Square" />
-
-                </RadzenChart>
-
+        <RadzenCard>
+            <div class="custom-card-header">Current Weather</div>
+            <div class="card-contents">
+                <RadzenRow Gap="1rem">
+                    <RadzenColumn Size="3" class="rz-text-align-center">
+                        @(new MarkupString(_iconChooser.GetIcon(WS.GetCurrentInfo().IsDay, WS.GetCurrentInfo().CloudCover, WS.GetCurrentInfo().Rain, WS.GetCurrentInfo().Snowfall)))
+                    </RadzenColumn>
+                    <RadzenColumn>
+                        <p>Temperature @WS.GetWeather().CurrentWeather.temperature</p>
+                        <p>Wind Speed: @WS.GetWeather().CurrentWeather.windspeed</p>
+                        <p>Wind Direction: @WS.GetWeather().CurrentWeather.winddirection</p>
+                        <p>Relative Humidity: @WS.GetCurrentInfo().RelativeHumidity</p>
+                        <p>UV Index: @WS.GetCurrentInfo().UVIndex</p>
+                    </RadzenColumn>
+                </RadzenRow>
             </div>
-        </div>
+        </RadzenCard>
 
 
-        <div class="card">
-            <div class="card-content">
-                <RadzenText>Daily Temperature</RadzenText>
-                <RadzenChart>
-                    <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Max Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_max">
-                        <RadzenMarkers MarkerType="MarkerType.Circle" />
-                    </RadzenLineSeries>
-                    <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Min Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_min">
-                        <RadzenMarkers MarkerType="MarkerType.Circle" />
-                    </RadzenLineSeries>
-                    <RadzenMarkers MarkerType="MarkerType.Square" />
-
-                </RadzenChart>
-
-            </div>
-        </div>
-
-
-        <div class="card">
-            <div class="card-content">
-                <p>Temperature @WS.GetWeather().CurrentWeather.temperature;</p>
-                <p>Wind Speed: @WS.GetWeather().CurrentWeather.windspeed</p>
-                <p>Wind Direction: @WS.GetWeather().CurrentWeather.winddirection</p>
-                <p>Relative Humidity: @WS.GetCurrentInfo().RelativeHumidity</p>
-                <p>UV Index: @WS.GetCurrentInfo().UVIndex</p>
-
-            </div>
-        </div>
-
-
-
-
-
-        <div class="card">
-            <div card-cotnent>
-                <div>
-
-
+                <div id="weather-icons">
                     <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
                         <defs>
                             <radialGradient id="gradYellow" cx="50%" cy="50%" r="80%" fx="90%" fy="80%">
@@ -190,8 +159,6 @@
                     </svg>
 
                 </div>
-            </div>
-        </div>
 
 
     </div>

@@ -7,7 +7,6 @@ using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
-using Blazored.LocalStorage;
 using Weather.Client.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -15,7 +14,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => { return new HttpClient() { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }; });
 
-builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddSingleton<IIconChooser, IconChooser>();
