@@ -10,10 +10,11 @@
         <RadzenChart >
             <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Max Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_max">
                 <RadzenMarkers MarkerType="MarkerType.Circle" />
-                    <RadzenSeriesDataLabels Visible="true"/>
+                    <RadzenSeriesDataLabels Visible="false" />
             </RadzenLineSeries>
             <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Min Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_min">
                 <RadzenMarkers MarkerType="MarkerType.Circle" />
+                    <RadzenSeriesDataLabels Visible="false" />
             </RadzenLineSeries>
              <RadzenCategoryAxis Visible="false"/>
             <RadzenMarkers MarkerType="MarkerType.Square" />
