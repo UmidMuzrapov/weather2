@@ -64,22 +64,69 @@ a, .btn-link {
     }
 
 /*Shared*/
-.card {
-    margin: auto;
-    border-radius: 5px;
-    margin: 10px auto;
-    padding: 5px;
-    background-color: #fd7e14;
-    max-width: 1000px;
-}
-
-.card-content{
-}
 
 /*Today*/
 #today{
     margin:auto;
 }
+    #today .custom-card-header {
+        padding: 10px;
+        background-color: var(--rz-base-300);
+    }
+
+#today .rz-card {
+        border-radius: var(--rz-card-border-radius);
+        box-shadow: var(--rz-shadow-2);
+        background-color: var(--rz-base-100);
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 0;
+}
+
+#today .card-content{
+    padding: 10px;
+}
+
+/*Daily*/
+
+
+    #daily .custom-card-header {
+        padding: 10px;
+        background-color: var(--rz-base-300);
+    }
+
+    #daily .rz-card {
+        border-radius: var(--rz-card-border-radius);
+        box-shadow: var(--rz-shadow-2);
+        background-color: var(--rz-base-100);
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 0;
+    }
+
+    #daily .card-content {
+        padding: 10px;
+    }
+
+/*Hourly*/
+
+    #hourly .custom-card-header {
+        padding: 10px;
+        background-color: var(--rz-base-300);
+    }
+
+    #hourly .rz-card {
+        border-radius: var(--rz-card-border-radius);
+        box-shadow: var(--rz-shadow-2);
+        background-color: var(--rz-base-100);
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 0;
+    }
+
+    #hourly .card-content {
+        padding: 10px;
+    }
 
 /*Loader*/
 .weather-icon body {
