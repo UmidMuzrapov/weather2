@@ -10,6 +10,20 @@
 @inject IWeatherService WS
 @inject IIconChooser _iconChooser
 
+@if (_successFlag)
+{
+    <RadzenAlert  AllowClose="false" AlertStyle="AlertStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter">
+        @_successMessage
+    </RadzenAlert>
+}
+
+@if (_errorFlag)
+{
+    <RadzenAlert AllowClose="false" AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter">
+       @_errorMessage
+    </RadzenAlert>
+}
+
 @if (WS.GetWeather() is not null)
 {
     <div id="today">
@@ -23,7 +37,7 @@
 
                 <p>Your cooridnates are @String.Format("{0:0.000}", WS.GetLocation().Latitude) @String.Format("{0:0.000}", WS.GetLocation().Longitude)</p>
                 <div>
-                    <RadzenGoogleMap Style="height: 300px" Zoom=@zoom Center=@(new GoogleMapPosition() {Lat=WS.GetLocation().Latitude, Lng=WS.GetLocation().Longitude}) MapClick=@OnMapClick MarkerClick="@OnMarkerClick">
+                    <RadzenGoogleMap Style="height: 300px" Zoom=@zoom Center=@(new GoogleMapPosition() {Lat=WS.GetLocation().Latitude, Lng=WS.GetLocation().Longitude}) MapClick=@OnMapClick>
                         <Markers>
                             <RadzenGoogleMapMarker Title=@WS.GetLocation().DisplayName Position=@(new GoogleMapPosition() {Lat=WS.GetLocation().Latitude, Lng=WS.GetLocation().Longitude}) />
                         </Markers>
@@ -159,8 +173,6 @@
                     </svg>
 
                 </div>
-
-
     </div>
 }
 
@@ -171,9 +183,13 @@
     private Location? location;
     private Weather? _weather;
     int orderID = 10248;
-    int zoom = 3;
+    int zoom = 6;
     bool smooth = false;
     bool showDataLabels = false;
+    private bool _errorFlag;
+    private bool _successFlag;
+    private string _errorMessage;
+    private string _successMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -183,13 +199,26 @@
 
         if (WS.GetWeather() is null)
         {
-            location = new Location();
-            await GetGeolocation();
-            double latitude = currentPosition.Coords.Latitude;
-            double longitude = currentPosition.Coords.Longitude;
-            await GetAddreess(latitude, longitude);
-            WS.SetDependencies(Http, Navigation);
-            await WS.SetWeather(location);
+            try
+            {
+                ShowProgressBar(true);
+                location = new Location();
+                await GetGeolocation();
+                double latitude = currentPosition.Coords.Latitude;
+                double longitude = currentPosition.Coords.Longitude;
+                await GetAddreess(latitude, longitude);
+                WS.SetDependencies(Http, Navigation);
+                await WS.SetWeather(location);
+                ShowProgressBar(false);
+            }
+
+            catch(Exception ex)
+            {
+                _errorFlag = true;
+                _successFlag = false;
+                _errorMessage = ex.Message;
+            }
+
         }
 
     }
@@ -231,7 +260,9 @@
 
             catch (Exception ex)
             {
-                Console.WriteLine("Somethign has gone wrong.");
+                _errorFlag = true;
+                _successFlag = false;
+                _errorMessage = ex.Message;
             }
 
         }
@@ -242,9 +273,14 @@
         }
     }
 
-    private async Task SetUpLocation(GoogleMapClickEventArgs args)
+    public async Task ShowProgressBar(bool show)
     {
+        if (show)
+        {
+            await DialogService.OpenAsync(null, rp =>@<div class="custom-center loader"> </div>, new DialogOptions { CloseDialogOnEsc = false, ShowClose = false, Style = "background-color: transparent; border: none; box-shadow: none;", ShowTitle = false });
+        }
 
+        else DialogService.Close();
     }
 
     private async Task GetTimeZone()
@@ -258,21 +294,32 @@
 
         catch (Exception ex)
         {
-            Console.WriteLine("Something went wrong.");
+            _errorFlag = true;
+            _successFlag = false;
+            _errorMessage = ex.Message;
         }
     }
 
     async void OnMapClick(GoogleMapClickEventArgs args)
     {
-        location.Latitude = args.Position.Lat;
-        location.Longitude = args.Position.Lng;
-        await GetAddreess(location.Latitude, location.Longitude);
-        await WS.SetWeather(location);
-        StateHasChanged();
-    }
+  
+        try
+        {
+            location.Latitude = args.Position.Lat;
+            location.Longitude = args.Position.Lng;
+            await GetAddreess(location.Latitude, location.Longitude);
+            await WS.SetWeather(location);
+            StateHasChanged();
+            _successFlag = true;
+            _errorFlag = false;
+            _successMessage = $"Location chnaged to {WS.GetLocation().DisplayName}";
+        }
 
-    void OnMarkerClick(RadzenGoogleMapMarker marker)
-    {
-
+        catch (Exception ex)
+        {
+            _errorFlag = true;
+            _successFlag = false;
+            _errorMessage = "This area is not supported.";
+        }
     }
 }
