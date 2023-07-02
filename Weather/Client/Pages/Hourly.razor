@@ -8,9 +8,10 @@
     <div class="custom-card-header">Hourly Temperature</div>
     <div class="card-content">
         <RadzenChart>
-            <RadzenLineSeries Smooth="true" Data="@WS.GetTodayInfo()" Title="Temperature (F)" CategoryProperty="Time.Hour" ValueProperty="Temperature2M" >
+            <RadzenLineSeries Smooth="true" Data="@WS.GetTodayInfo()" Title="Temperature (F)" CategoryProperty="Time.Hour" ValueProperty="Temperature2M"  >
                 <RadzenMarkers MarkerType="MarkerType.Circle" />
             </RadzenLineSeries>
+            <RadzenCategoryAxis Padding="20" Max="24" Min="0"/>
             <RadzenMarkers MarkerType="MarkerType.Square" />
         </RadzenChart>
     </div>

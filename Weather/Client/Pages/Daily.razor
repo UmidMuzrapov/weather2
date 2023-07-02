@@ -7,17 +7,18 @@
 <RadzenCard>
     <div class="custom-card-header">Daily Temperature</div>
     <div class="card-content">
-        <RadzenChart>
+        <RadzenChart >
             <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Max Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_max">
                 <RadzenMarkers MarkerType="MarkerType.Circle" />
+                    <RadzenSeriesDataLabels Visible="true"/>
             </RadzenLineSeries>
             <RadzenLineSeries Smooth="true" Data="@WS.GetDaysInfo()" Title="Min Temperature (F)" CategoryProperty="time" ValueProperty="temperature_2m_min">
                 <RadzenMarkers MarkerType="MarkerType.Circle" />
             </RadzenLineSeries>
+             <RadzenCategoryAxis Visible="false"/>
             <RadzenMarkers MarkerType="MarkerType.Square" />
 
         </RadzenChart>
-
     </div>
 </RadzenCard>
 </div>
