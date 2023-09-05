@@ -221,6 +221,13 @@
 
         }
 
+        else
+        {
+            location = WS.GetLocation();
+            _weather = WS.GetWeather();
+
+        }
+
     }
 
     public async Task GetGeolocation()
@@ -302,7 +309,7 @@
 
     async void OnMapClick(GoogleMapClickEventArgs args)
     {
-  
+
         try
         {
             location.Latitude = args.Position.Lat;
@@ -321,5 +328,7 @@
             _successFlag = false;
             _errorMessage = "This area is not supported.";
         }
+
+        StateHasChanged();
     }
-}
+  }
