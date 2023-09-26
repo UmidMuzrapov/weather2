@@ -28,7 +28,7 @@ namespace Weather.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<Weather.Shared.Models.Main.Weather> GetWeatherDataForTucsonAsync(Location location)
+        public async Task<Weather.Shared.Models.Main.Weather> GetWeatherDataForLocation(Location location)
         {
             Timezone timezone = await GetTimeZone(location);
 
