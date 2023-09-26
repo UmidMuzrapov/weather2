@@ -21,7 +21,7 @@ namespace Weather.Server.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<Timezone> GetTimeZone(Location location)
         {
-            string apiUrl = System.String.Format("https://api.ipgeolocation.io/timezone?apiKey=a1cf5af5a30442fc8f89d77a26e56cc3&lat={0:g}&long={0:g}", location.Latitude, location.Longitude);
+            string apiUrl = System.String.Format("https://api.ipgeolocation.io/timezone?apiKey={apikey}&lat={0:g}&long={0:g}", location.Latitude, location.Longitude);
 
             HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
 
@@ -46,22 +46,9 @@ namespace Weather.Server.Controllers
                         Time12=time_12
                 };
 
-
-
-
-                //double windDirection = jsonObject.RootElement.GetProperty("hourly").EnumerateArray()
-                //                                    .Last().GetProperty("wind_direction").GetDouble();
-
-                //double temperature = jsonObject.RootElement.GetProperty("hourly").EnumerateArray()
-                //                                    .Last().GetProperty("temperature").GetDouble();
-
-                //double totalCloudCover = jsonObject.RootElement.GetProperty("hourly").EnumerateArray()
-                //                                    .Last().GetProperty("total_cloud_cover").GetDouble();
-
-                //return (windSpeed, windDirection, temperature, totalCloudCover);
-
                 return result;
             }
+            
             else
             {
                 throw new Exception($"Error retrieving weather data: {response.ReasonPhrase}");
