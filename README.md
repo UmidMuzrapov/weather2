@@ -3,8 +3,8 @@ Global Weather is a dynamic web application offering weather analysis and predic
 Users can pick any location on the map to generate a weather report as well as charts.
 
 ## Configuration 
-No configuration is needed. The link to the live demo: https://umidmuzrapov.github.io/weather2/
-The project is published in github pages using github action.
+No configuration is needed.
+The project can be published in github pages using github action.
 ```
 name: Deploy to GitHub Pages
 on:
